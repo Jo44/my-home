@@ -1,0 +1,9 @@
+#map {
+	height: 400px;
+}
+
+.panel-error {
+	margin-top: 20px;
+	margin-left: 20px;
+	margin-right: 20px;
+}

@@ -1,0 +1,117 @@
+/* Tableau */
+th {
+	text-align: center;
+}
+
+.table>tbody>tr>td {
+	vertical-align: middle;
+}
+
+.table>tbody>tr>td>label {
+	margin-bottom: 0px;
+	margin-top: 3px;
+}
+
+.white {
+	color: white;
+}
+
+.light-grey {
+	color: #ddd;
+}
+
+/* Boutons */
+.btn-fix-long {
+	width: 80px;
+}
+
+/* Label Checkbox */
+.lbl_check {
+	position: relative;
+	bottom: 12px;
+	margin-right: 10px;
+}
+
+/* Checkbox custom */
+
+/* Le switch 'Active' - le contour du slider */
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 32px;
+	height: 23px;
+}
+
+/* Cache la checkbox HTML par défaut */
+.switch input {
+	display: none;
+}
+
+/* Le slider */
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+}
+
+.slider:before {
+	position: absolute;
+	content: "";
+	height: 15px;
+	width: 15px;
+	left: 4px;
+	bottom: 4px;
+	background-color: #f0f0f0;
+	-webkit-transition: .4s;
+	transition: .4s;
+}
+
+input:checked+.slider {
+	background-color: #337ab7;
+}
+
+input:focus+.slider {
+	box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+	-webkit-transform: translateX(9px);
+	-ms-transform: translateX(9px);
+	transform: translateX(9px);
+}
+
+/* Arrondis les sliders */
+.slider.round {
+	border-radius: 34px;
+}
+
+.slider.round:before {
+	border-radius: 50%;
+}
+
+/* Preview */
+#preview-youtube {
+	display: none;
+}
+
+.preview-fixed {
+	height: 200px;
+}
+
+/* Theme Dark (player) */
+#panelDark {
+	background-color: #222;
+	border-color: #777;
+	max-width: 100%;
+}
+
+#panelHeadingDark {
+	color: #777;
+	background-color: #222;
+}

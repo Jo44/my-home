@@ -1,0 +1,37 @@
+/* Formulaire */
+#newNoteForm {
+	margin-top: 0px;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+#inputDate {
+	width: 144px;
+}
+
+#inputHeure, #inputMinute {
+	height: 26px;
+	width: 40px;
+}
+
+#textTitle {
+	width: 100%;
+}
+
+#areaComment {
+	margin-top: 5px;
+	margin-bottom: 20px;
+	width: 100%;
+	resize: vertical;
+	text-align: left;
+}
+
+/* Panel */
+.panel-error {
+	margin: 20px;
+}
+
+/* Tableau */
+th {
+	text-align: center;
+}

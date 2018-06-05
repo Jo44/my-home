@@ -1,0 +1,36 @@
+/* Panel */
+.add-file {
+	padding-left: 10%;
+	padding-right: 10%;
+}
+
+.no-file {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+.max-file {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+/* Formulaire */
+#newFileForm {
+	margin-top: 10px;
+}
+
+/* Bouton */
+.btn-group {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+/* Tableau */
+th {
+	text-align: center;
+}
+
+/* Polices */
+.white {
+	color: white;
+}

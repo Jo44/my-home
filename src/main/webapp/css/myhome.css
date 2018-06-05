@@ -1,0 +1,210 @@
+/* General */
+body {
+	background-color: #222;
+	color: #ddd;
+}
+
+#page-wrapper {
+	background-color: #222;
+	text-align: center;
+}
+
+input {
+	text-align: center;
+}
+
+.name {
+	min-width: 160px;
+	text-align: right;
+}
+
+.dark-grey {
+	color: #585858;
+}
+
+/* Panel */
+.panel-default {
+	max-width: 600px;
+	color: black;
+	margin-top: 50px;
+}
+
+.panel-large {
+	max-width: 800px;
+	color: black;
+	margin-top: 50px;
+}
+
+.panel-heading {
+	border-bottom: 0px;
+	text-align: left;
+}
+
+.panel-body {
+	padding: 0;
+}
+
+.message-box {
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	font-size: 0.9em;
+	padding: 10px;
+	text-align: justify;
+}
+
+.panel-error {
+	border-radius: 5px;
+	margin-bottom: 0;
+}
+
+/* Divers */
+.center {
+	text-align: center;
+}
+
+.center-div {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.margin-div {
+	margin: auto;
+}
+
+.small-marged {
+	margin: 1px;
+}
+
+.marged-top {
+	margin-top: 10px;
+}
+
+.marged-bottom {
+	margin-bottom: 10px;
+}
+
+.marged-right {
+	margin-right: 10px;
+}
+
+.marged-left {
+	margin-left: 10px;
+}
+
+.big-marged-top {
+	margin-top: 25px;
+}
+
+.big-marged-bottom {
+	margin-bottom: 25px;
+}
+
+.big-marged-left {
+	margin-left: 35px;
+}
+
+.big-marged-right {
+	margin-right: 35px;
+}
+
+.no-marged-bottom {
+	margin-bottom: 0px;
+}
+
+.in-line {
+	display: inline-block;
+}
+
+.in-block {
+	display: block;
+}
+
+.on-right {
+	float: right;
+}
+
+.on-left {
+	float: left;
+}
+
+.table-striped {
+	margin: 0;
+	font-size: 0.9em;
+}
+
+.spaced {
+	padding: 0;
+	margin: 15px;
+}
+
+.spaced-vertical {
+	padding: 0;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.big-spaced-vertical {
+	padding: 0;
+	margin-top: 25px;
+	margin-bottom: 25px;
+}
+
+/* Boutons */
+.btn-perso, .btn-perso:focus, .btn-perso:visited, .btn-perso:hover,
+	.btn-perso:active {
+	color: white;
+}
+
+/* Liens */
+.page-arrow, .page-arrow:focus, .page-arrow:visited, .page-arrow:hover,
+	.page-arrow:active {
+	text-decoration: none;
+	color: #5cb85c;
+}
+
+.order-arrow, .order-arrow:focus, .order-arrow:visited, .order-arrow:hover,
+	.order-arrow:active {
+	text-decoration: none;
+	color: #909090;
+}
+
+/* Select Pagination */
+#selectPerPage {
+	position: relative;
+	top: 1px;
+	background: #f5f5f5;
+}
+
+/* Order */
+.title-order-top {
+	position: relative;
+	top: 6px;
+}
+
+.title-order-bottom {
+	position: relative;
+	bottom: 6px;
+}
+
+/* Modal Suppression */
+.btn-fixed {
+	min-width: 80px;
+}
+
+.modal-body {
+	background: #f5f5f5;
+}
+
+/* Font */
+.bold {
+	font-weight: bold;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.link-tab-list a {
+	text-decoration: none;
+	color: #222;
+}

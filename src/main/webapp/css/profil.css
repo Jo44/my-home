@@ -1,0 +1,11 @@
+/* Divers */
+.row {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+/* Tableau */
+.panel-body {
+	text-align: left;
+	padding: 30px;
+}
