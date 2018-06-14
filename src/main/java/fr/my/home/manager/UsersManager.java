@@ -328,12 +328,12 @@ public class UsersManager {
 						&& email.trim().length() >= 51) {
 					throw new FonctionnalException("La longueur des champs saisis n'est pas correcte.");
 				} else {
-					throw new FonctionnalException("La vérification du reCaptcha est manquante");
+					throw new FonctionnalException("La vérification du reCaptcha est manquante.");
 				}
 			}
 		} else {
-			// Paramètre manquant (reCaptcha ?)
-			throw new FonctionnalException("Un paramètre est manquant");
+			// reCaptcha manquant
+			throw new FonctionnalException("Le reCaptcha n'est pas présent.");
 		}
 		return hashPass;
 	}

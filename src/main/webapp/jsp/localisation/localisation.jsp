@@ -83,8 +83,11 @@
 								</p>
 							</div>
 							<div class="panel-body">
+								<noscript><div class="spaced-vertical">Javascript doit être activé sur votre navigateur pour afficher la Google Map.</div></noscript>
 								<div id="map"></div>
 								<script>
+									  document.getElementById('map').style.display = 'block';
+								
 								      var map;
 								      function initMap() {
 								      	  var coordonnees = {lat: <%= objectIPAPI.getLat() %>, lng: <%= objectIPAPI.getLon() %>};

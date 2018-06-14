@@ -28,8 +28,8 @@ import fr.my.home.tool.Settings;
  * Manager qui prends en charge la gestion des fichiers
  * 
  * @author Jonathan
- * @version 1.3
- * @since 02/05/2018
+ * @version 1.3.5
+ * @since 14/06/2018
  */
 public class FilesManager {
 	private static final Logger logger = LogManager.getLogger(FilesManager.class);
@@ -39,8 +39,8 @@ public class FilesManager {
 	 */
 	private static final String MYHOME_PATH = System.getenv("MYHOME");
 	private static final int FILES_BUFFER_SIZE = Settings.getIntProperty("files_buffer_size"); // 10 ko
-	private static final long FILES_MAX_FILE_SIZE = Settings.getLongProperty("files_max_file_size"); // 10 Mo
-	private static final long FILES_MAX_REQUEST_SIZE = Settings.getLongProperty("files_max_request_size"); // 50 Mo
+	private static final long FILES_MAX_FILE_SIZE = Settings.getLongProperty("files_max_file_size"); // 100 Mo
+	private static final long FILES_MAX_REQUEST_SIZE = Settings.getLongProperty("files_max_request_size"); // 250 Mo
 	private FileDAO fileDAO;
 
 	/**
@@ -126,15 +126,18 @@ public class FilesManager {
 	}
 
 	/**
-	 * Ajoute l'ensemble des fichiers transmis au formulaire, ou erreur fonctionnelle/technique/IO si pas possible
+	 * Ajoute l'ensemble des fichiers transmis au formulaire et renvoi le nombre de fichier ajouté, ou erreur fonctionnelle/technique/IO si pas
+	 * possible
 	 * 
 	 * @param fileParts
 	 * @param userId
+	 * @return nbFile
 	 * @throws FonctionnalException
 	 * @throws TechnicalException
 	 * @throws IOException
 	 */
-	public void addFile(List<Part> fileParts, int userId) throws FonctionnalException, TechnicalException, IOException {
+	public int addFiles(List<Part> fileParts, int userId) throws FonctionnalException, TechnicalException, IOException {
+		int nbFile = 0;
 		// Vérifie si des fichiers sont sélectionnés ou non
 		// Dans tous les cas, récupère un part donc on vérifie si il a un nom
 		if (Paths.get(fileParts.get(0).getSubmittedFileName()).getFileName().toString().isEmpty()) {
@@ -142,7 +145,6 @@ public class FilesManager {
 			logger.debug(error);
 			throw new FonctionnalException(error);
 		} else {
-			logger.debug("Chemin : " + MYHOME_PATH);
 			// Assemble le chemin principal de stockage des fichiers
 			// {chemin}/{files}
 			File fileFolder = new File(MYHOME_PATH + "//files");
@@ -168,22 +170,28 @@ public class FilesManager {
 				}
 			}
 			// Vérification si les fichiers sont valides pour l'upload
-			boolean valid = true;
+			boolean validRequest = true;
 			long requestSize = 0L;
 			String failedNamePart = "";
 			for (Part filePart : fileParts) {
 				requestSize += filePart.getSize();
 				if (filePart.getSize() > FILES_MAX_FILE_SIZE) {
 					failedNamePart = filePart.getSubmittedFileName();
-					valid = false;
+					validRequest = false;
 				}
 			}
-			// Si les fichiers ne sont pas trop lourd
-			if (valid && requestSize < FILES_MAX_REQUEST_SIZE) {
+			// Vérifie si l'utilisateur possède encore de l'espace de stockage dédié (5 Go / utilisateur)
+			// Récupère l'espace restant avant tentative stockage
+			long freeSpace = getFreeSpace(userId);
+			// Récupère l'espace restant après tentative stockage
+			long afterSentFreeSpace = freeSpace - requestSize;
+
+			// Si les fichiers ne sont pas trop lourd et qu'il reste suffisament d'espace de stockage
+			if (validRequest && requestSize <= FILES_MAX_REQUEST_SIZE && afterSentFreeSpace >= 0L) {
 				// Enregistre chaque fichier en BDD et sur le disque
 				for (Part filePart : fileParts) {
-					// Récupère le nom en minuscule, sans espaces, max 100 caracteres (en gardant l'extension finale)
-					String fileName = (Paths.get(filePart.getSubmittedFileName()).getFileName().toString()).replace(" ", "_").toLowerCase();
+					// Récupère le nom avec max 100 caracteres (en gardant l'extension finale)
+					String fileName = (Paths.get(filePart.getSubmittedFileName()).getFileName().toString());
 					// Traitement pour nom max 100 carctères
 					if (fileName.length() > 99) {
 						// Récupère l'extension (si elle existe)
@@ -203,6 +211,10 @@ public class FilesManager {
 					long fileSize = filePart.getSize();
 					logger.debug("Taille du fichier : " + fileSize);
 					try {
+						// Vérifie si un fichier portant ce nom existe déjà
+						if (fileDAO.checkOneFileByName(fileName, userId)) {
+							throw new FonctionnalException("Un fichier portant ce nom existe déjà");
+						}
 						// Préparation pour ajout MySQL
 						CustomFile file = new CustomFile(userId, fileSize, fileName, null);
 						// Ecriture en BDD ...
@@ -212,10 +224,9 @@ public class FilesManager {
 						// ... puis en stockage
 						writeFile(filePart, fileUserFolder.toString(), fileName);
 						logger.debug("Fichier ajouté avec succès");
+						nbFile++;
 					} catch (FonctionnalException fex) {
-						String error = "Un fichier portant ce nom existe déjà";
-						logger.debug(error);
-						fex.setMessage(error);
+						logger.debug(fex.getMessage());
 						throw fex;
 					} catch (TechnicalException tex) {
 						String error = "Erreur technique lors de l'ajout du fichier (" + fileName + ")";
@@ -228,18 +239,56 @@ public class FilesManager {
 					}
 				}
 			} else {
-				// Si les fichiers sont trop lourds
-				if (!valid) {
+				// Si les fichiers sont trop lourds ou espace de stockage disponible insuffisant
+				if (!validRequest) {
 					String error = "Le fichier '" + failedNamePart + "' est trop volumineux";
 					logger.debug(error);
 					throw new FonctionnalException(error);
+				} else if (requestSize > FILES_MAX_REQUEST_SIZE) {
+					String error = "Le total des fichiers est trop volumineux";
+					logger.debug(error);
+					throw new FonctionnalException(error);
 				} else {
-					String error = "Le total des fichiers dépasse 50 Mo";
+					String error = "Espace de stockage disponible insuffisant";
 					logger.debug(error);
 					throw new FonctionnalException(error);
 				}
 			}
 		}
+		return nbFile;
+	}
+
+	/**
+	 * Retourne l'espace de stockage restant pour l'utilisateur (Total : 5 Go)
+	 * 
+	 * @param userId
+	 * @return freeSpace
+	 * @throws TechnicalException
+	 */
+	private long getFreeSpace(int userId) throws TechnicalException {
+		long freeSpace = 0L;
+		long totalSpace = 5368709120L; // 5 Go
+		long usedSpace = 0L;
+
+		try {
+			// Calcul le poids total déjà enregistré
+			List<CustomFile> listFile = fileDAO.getAllFiles(userId);
+			for (CustomFile file : listFile) {
+				usedSpace += file.getWeight();
+			}
+		} catch (FonctionnalException fex) {
+			// Aucun fichier pour l'utilisateur
+			usedSpace = 0L;
+		} finally {
+			if (usedSpace >= totalSpace) {
+				// Si poids max déjà atteint
+				freeSpace = 0L;
+			} else {
+				// Si espace libre
+				freeSpace = totalSpace - usedSpace;
+			}
+		}
+		return freeSpace;
 	}
 
 	/**

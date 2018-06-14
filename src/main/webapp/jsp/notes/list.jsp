@@ -49,7 +49,7 @@
 							<div class="panel-heading">
 								<i class="fa fa-fw fa-edit"></i> Mes notes
 								<div class="pull-right">
-									<select id="selectPerPage" class="marged-right" onchange="changePerPage()">
+									<select id="selectByPage" class="marged-right" onchange="changeByPage()">
 										<option value="10">10</option>
 										<option value="25">25</option>
 										<option value="50">50</option>
@@ -81,6 +81,7 @@
 								<%
 									} else {
 								%>
+								<noscript><div class="spaced-vertical">Javascript doit être activé sur votre navigateur pour afficher la liste des notes enregistrées.</div></noscript>
 								<div id="listingTable"></div>
 								<div id="paginationBloc">
 									<a href="javascript:prevPage()" id="btn_prev" class="page-arrow fa fa-fw fa-arrow-left on-left big-marged-left marged-top marged-bottom"></a>

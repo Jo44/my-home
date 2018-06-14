@@ -54,6 +54,7 @@
 								<%
 									if (listVideo != null && listVideo.size() > 0) {
 								%>
+								<noscript><div class="spaced-vertical dark-grey">Javascript doit être activé sur votre navigateur pour afficher le lecteur YouTube.</div></noscript>
 								<div id="player"></div>
 								<div class="spaced-vertical">
 									<button class="btn btn-primary btn-xs btn-perso btn-fix-long marged-right" onclick="previousVideo()">Précédent</button>

@@ -75,9 +75,13 @@
 									<input class="form-control center" placeholder="Email" name="user_email" type="email" maxlength="50" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}"
 										required>
 								</div>
-								<div class="form-group recaptcha">
+								<noscript><div class="center marged-bottom">Javascript doit être activé sur votre navigateur pour afficher la vérification par reCaptcha.</div></noscript>
+								<div id="recaptcha" class="form-group">
 									<div class="g-recaptcha" data-sitekey="****"></div>
 								</div>
+								<script type="text/javascript">
+									document.getElementById('recaptcha').style.display = 'block';
+								</script>
 								<button type="submit" class="btn btn-sm btn-block btn-medium">Inscription</button>
 								<a class="btn btn-sm btn-block btn-medium" href="<%=path%>/check">Revenir à la connexion</a>
 							</fieldset>

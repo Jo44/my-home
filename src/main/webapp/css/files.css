@@ -1,17 +1,6 @@
 /* Panel */
-.add-file {
-	padding-left: 10%;
-	padding-right: 10%;
-}
-
-.no-file {
-	margin-top: 30px;
-	margin-bottom: 30px;
-}
-
-.max-file {
-	margin-top: 10px;
-	margin-bottom: 10px;
+.panel-add {
+	margin-top: 20px;
 }
 
 /* Formulaire */
@@ -33,4 +22,48 @@ th {
 /* Polices */
 .white {
 	color: white;
+}
+
+/* Input File */
+
+.label-file {
+    color: #5cb85c;
+    font-weight: bold;
+}
+.label-file:hover {
+    color: #449d44;
+}
+
+#fileInput {
+	display: none;
+}
+
+/* Progress Bar */
+.progress {
+	max-width: 200px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.progress-bar {
+	background-color: #337ab7;
+}
+
+.progress-bar-warning {
+	background-color: #f0ad4e;
+}
+
+.progress-bar-alert {
+	background-color: #d9534f;
+}
+
+.progress-bar-value {
+	color: #f5f5f5;
+	text-shadow: 1px 1px #000000;
+	font-weight: bold;
+}
+
+.progress-bar-value-inverted {
+	color: #646464;
+	font-weight: bold;
 }

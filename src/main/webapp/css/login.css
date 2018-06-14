@@ -34,7 +34,8 @@
 	font-weight: bold;
 }
 
-.recaptcha {
+#recaptcha {
+	display: none;
 	width: 304px;
 	height: 78px;
 	margin-left: auto;

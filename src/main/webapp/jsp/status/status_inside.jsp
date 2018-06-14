@@ -60,15 +60,14 @@
 								<div class="col-xs-12 center spaced-vertical">
 									<br>
 									<p>
-										<i class="fa fa-fw fa-database"></i> Base de données : <b>
+										<i class="fa fa-fw fa-database"></i> Base de données :
 										<%
 										 	if (databaseOnline) {
-										 		out.print("<span class='green-font'>En ligne</span>");
+										 		out.print("<span class='green-font bold'>En ligne</span>");
 										 	} else {
-										 		out.print("<span class='red-font'>Hors ligne</span>");
+										 		out.print("<span class='red-font bold'>Hors ligne</span>");
 										 	}
 										 %>
-										</b>
 									</p>
 									<br>
 								</div>

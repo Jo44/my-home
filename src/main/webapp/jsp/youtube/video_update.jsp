@@ -69,6 +69,7 @@
 									<button onclick="testVideo()" class="btn btn-primary btn-sm btn-perso btn-fix-long marged-left"
 										title="Test la vidéo et remplis les champs automatiquement">Tester</button>
 									<button onclick="clearFields()" class="btn btn-danger btn-sm btn-perso btn-fix-long marged-right" title="Efface tous les champs">Effacer</button>
+									<noscript><div class="spaced-vertical">Javascript doit être activé sur votre navigateur pour tester la vidéo.</div></noscript>
 								</div>
 							</div>
 						</div>

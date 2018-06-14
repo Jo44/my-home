@@ -30,6 +30,7 @@ public class FileDAO implements HibernateDAO<CustomFile> {
 	 */
 	private static final String FILEDAO_GET_ALL = Settings.getStringProperty("files_get_all");
 	private static final String FILEDAO_GET_ONE = Settings.getStringProperty("files_get_one");
+	private static final String FILEDAO_GET_ONE_BY_NAME = Settings.getStringProperty("files_get_one_by_name");
 
 	/**
 	 * Constructeur
@@ -65,7 +66,7 @@ public class FileDAO implements HibernateDAO<CustomFile> {
 	}
 
 	/**
-	 * Récupère un fichier selon son ID et l'ID de l'utilisateur, ou exception fonctionnelle si elle n'existe pas
+	 * Récupère un fichier selon son ID et l'ID de l'utilisateur, ou exception fonctionnelle si il n'existe pas
 	 * 
 	 * @param fileId
 	 * @param userId
@@ -88,6 +89,34 @@ public class FileDAO implements HibernateDAO<CustomFile> {
 			DatabaseAccess.getInstance().validateSession(session);
 		}
 		return file;
+	}
+
+	/**
+	 * Récupère un fichier selon son nom et l'ID de l'utilisateur, ou exception fonctionnelle si il n'existe pas
+	 * 
+	 * @param filename
+	 * @param userId
+	 * @return boolean
+	 * @throws FonctionnalException
+	 * @throws TechnicalException
+	 */
+	public boolean checkOneFileByName(String filename, int userId) throws TechnicalException {
+		boolean exist;
+		Session session = DatabaseAccess.getInstance().openSession();
+		@SuppressWarnings("unchecked")
+		Query<CustomFile> query = session.createQuery(FILEDAO_GET_ONE_BY_NAME);
+		query.setParameter("file_name", filename);
+		query.setParameter("file_id_user", userId);
+		try {
+			// Inutile de stocker le fichier récupéré
+			query.getSingleResult();
+			exist = true;
+		} catch (NoResultException nre) {
+			exist = false;
+		} finally {
+			DatabaseAccess.getInstance().validateSession(session);
+		}
+		return exist;
 	}
 
 	/**

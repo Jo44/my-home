@@ -44,7 +44,7 @@ import fr.my.home.tool.Settings;
  * @since 02/05/2018
  */
 @WebServlet("/files")
-@MultipartConfig(fileSizeThreshold = 0, maxFileSize = 1024 * 1024 * 10, maxRequestSize = 1024 * 1024 * 50)
+@MultipartConfig(fileSizeThreshold = 0, maxFileSize = 1024 * 1024 * 100, maxRequestSize = 1024 * 1024 * 250)
 public class FilesServlet extends HttpServlet {
 	private static final long serialVersionUID = 930448801449184468L;
 	private static final Logger logger = LogManager.getLogger(FilesServlet.class);
@@ -145,29 +145,32 @@ public class FilesServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		logger.info("--> Files Servlet [POST] -->");
 		logger.info("Tentative d'upload de fichier(s) ..");
+		int nbAddedFile;
 
 		// Récupération de l'utilisateur connecté
 		User user = (User) request.getSession().getAttribute("user");
 
-		// Récupère la liste des parts du formulaire (fichiers envoyés ou non)
-		// <input type="file" name="fichier" multiple="true">
-		List<Part> fileParts = request.getParts().stream().filter(part -> "fichier".equals(part.getName())).collect(Collectors.toList());
-
 		try {
-			// Essaye d'ajouter les fichiers en base et sur le stockage
-			fileMgr.addFile(fileParts, user.getId());
+			// Récupère la liste des parts du formulaire (fichiers envoyés ou non)
+			// <input type="file" name="file" multiple="true">
+			List<Part> fileParts = request.getParts().stream().filter(part -> "file".equals(part.getName())).collect(Collectors.toList());
 
-			// Ajoute le message de succès dans la session
-			request.getSession().setAttribute("success", "Les fichiers ont été correctement ajoutés");
+			// Essaye d'ajouter les fichiers en base et sur le stockage
+			nbAddedFile = fileMgr.addFiles(fileParts, user.getId());
+
+			// Ajoute le message de succès dans la session (en fonction du nombre de fichier ajouté)
+			if (nbAddedFile > 1) {
+				request.getSession().setAttribute("success", "Les fichiers ont été correctement ajoutés");
+			} else {
+				request.getSession().setAttribute("success", "Le fichier a été correctement ajouté");
+			}
 		} catch (FonctionnalException fex) {
 			request.getSession().setAttribute("error", fex.getMessage());
 		} catch (TechnicalException tex) {
 			request.getSession().setAttribute("error", FILE_ERROR_DB);
 		} catch (IOException ioe) {
-			request.getSession().setAttribute("error", "Erreur d'écriture du fichier !");
+			request.getSession().setAttribute("error", "Erreur d'écriture des fichiers !");
 		} catch (IllegalStateException ise) {
-			// TODO : Problème poids des fichiers dépassant les seuils + check warnings jsp
-			// encore en boucle :'( :'( :'(
 			String error = "La taille des fichiers dépassent le poids autorisé";
 			logger.error(error);
 			request.getSession().setAttribute("error", error);
@@ -234,8 +237,8 @@ public class FilesServlet extends HttpServlet {
 	}
 
 	/**
-	 * Récupère la liste des fichiers de l'utilisateur, la tri en fonction des paramètres, puis renvoi vers la JSP fichiers avec message d'erreur si
-	 * besoin
+	 * Récupère la liste des fichiers de l'utilisateur, le poids total utilisé, tri la liste en fonction des paramètres, puis renvoi vers la JSP
+	 * fichiers avec message d'erreur si besoin
 	 * 
 	 * @param request
 	 * @param response
@@ -249,9 +252,15 @@ public class FilesServlet extends HttpServlet {
 	private void redirectToFiles(HttpServletRequest request, HttpServletResponse response, ViewJSP view, int userId, String orderBy, String dir)
 			throws ServletException, IOException {
 		List<CustomFile> listFile = null;
+		long usedSpace = 0L;
 		try {
 			// Récupère la liste des fichiers de l'utilisateur
 			listFile = fileMgr.getFiles(userId);
+
+			// Récupère le poids total utilisé
+			for (CustomFile file : listFile) {
+				usedSpace += file.getWeight();
+			}
 
 			// Tri la liste en fonction des paramètres
 			listFile = fileMgr.orderBy(listFile, orderBy, dir);
@@ -262,6 +271,7 @@ public class FilesServlet extends HttpServlet {
 			view.addAttributeToList(new ViewAttribut("error", FILE_ERROR_DB));
 		}
 		view.addAttributeToList(new ViewAttribut("listFile", listFile));
+		view.addAttributeToList(new ViewAttribut("usedSpace", usedSpace));
 		redirectToFilesJSP(request, response, view);
 	}
 
